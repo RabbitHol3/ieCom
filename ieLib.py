@@ -1,6 +1,6 @@
 import time
-from win32com.client import Dispatch
 
+from win32com.client import Dispatch
 
 class IE:
     def __init__(self, **kwargs):
@@ -8,6 +8,20 @@ class IE:
         self.driver.Visible = kwargs.get('visible', 0)
         self.url = kwargs.get('url', '')
         self.timeout = kwargs.get('timeout', 5)
+        self.oShell = Dispatch('WScript.Shell')
+
+    def activate(self):
+        self.oShell.Appactivate('Internet Explorer')
+        return True
+
+    def maxmize(self):
+        self.activate()
+        self.oShell.SendKeys('% x')
+        return True
+
+    def minimize(self):
+        self.activate()
+        self.oShell.SendKeys('% n')
 
     def wait_its_ready(self):
         timeout = self.timeout
@@ -61,3 +75,5 @@ class IE:
             except AttributeError:
                 continue
         return retorno
+
+
