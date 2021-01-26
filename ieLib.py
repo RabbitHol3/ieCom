@@ -1,3 +1,4 @@
+import time
 from win32com.client import Dispatch
 
 
@@ -7,8 +8,14 @@ class IE:
         self.driver.Visible = kwargs.get('visible', 0)
         self.url = kwargs.get('url', '')
 
-    def navigate(self, url):
+    def navigate(self, url, timeout=5):
         self.driver.Navigate(url)
+        while (self.driver.ReadyState != 4):
 
-    def get_element_by_
-        https: // gist.github.com / f78be1494a5f5e27ff388877059d0001
+            time.sleep(0.05)
+            if not timeout:
+                return False
+            timeout -= 0.05
+
+    def get_element_by_id(self):
+        pass
