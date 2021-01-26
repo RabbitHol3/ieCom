@@ -10,7 +10,7 @@ class IE:
 
     def navigate(self, url, timeout=5):
         self.driver.Navigate(url)
-        while (self.driver.ReadyState != 4):
+        while self.driver.ReadyState != 4:
 
             time.sleep(0.05)
             if not timeout:
