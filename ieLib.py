@@ -18,7 +18,31 @@ class IE:
         return True
 
     def get_element_by_id(self, id):
-        return [elemento for elemento in ie.document.all if elemento.id == id]
+        retorno = []
+        for elemento in self.driver.document.all:
+            try:
+                if elemento.id == id:
+                    retorno.append(elemento)
+            except AttributeError:
+                continue
+        return retorno
 
-    def find_elements_by_tag_name(self, name):
-        return [elemento for elemento in ie.document.all if elemento.tag_name == name]
+    def get_elements_by_tag_name(self, name):
+        retorno = []
+        for elemento in self.driver.document.all:
+            try:
+                if elemento.tagName == name:
+                    retorno.append(elemento)
+            except AttributeError:
+                continue
+        return retorno
+
+    def get_elements_by_name(self, name):
+        retorno = []
+        for elemento in self.driver.document.all:
+            try:
+                if elemento.name == name:
+                    retorno.append(elemento)
+            except AttributeError:
+                continue
+        return retorno
