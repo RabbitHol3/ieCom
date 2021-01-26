@@ -36,7 +36,6 @@ ie = IE(url=url, visible=True)
 dic = {
     'lg': 'nONoGame',
     'pw': '14a86fbc0091',
-    'test':2
 }
 
 # tydpczedpczcrepfoi@mhzayt.online
