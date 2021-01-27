@@ -55,15 +55,30 @@ class criminoso:
 
 
     def estamina(self):
-        return int(self.parse_rigth_content()[9].split(' ')[1].split('%')[0])
+        return int(self.parse_rigth_content()[10].split(' ')[1].split('%')[0])
 
     def addiction(self):
-        return int(self.parse_right_content())[11].split(' ')[1].split('%')[0]
+        return int(self.parse_right_content())[12].split(' ')[1].split('%')[0]
 
 
     def hp(self):
-        self.parse_right_content()[10].split('HP: ')[1].split(' / ')
-        pass
+        self.parse_right_content()[11].split('HP: ')[1].split(' / ')
+
+    def money(self):
+        return float(self.parse_right_content()[22].split('$')[1])
+
+    def pwr_solo(self):
+        return int(self.parse_right_content()[24])
+
+    def pwr_gg(self):
+        return int(self.parse_right_content()[26])
+
+    def pwr_fight(self):
+        return int(self.parse_right_content()[28])
+
+    def creditos(self):
+        return int(self.parse_right_content()[29].split(': ')[1])
+
 
 
 class botStats:

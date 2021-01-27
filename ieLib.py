@@ -75,5 +75,3 @@ class IE:
             except AttributeError:
                 continue
         return retorno
-
-
