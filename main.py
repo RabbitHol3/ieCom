@@ -7,8 +7,6 @@ with open('../tc_auth.txt') as f:
 cliente = crims(login=auth['username'], password=auth['password'], url=auth['url'], visible=True)
 
 cliente.log_in()
-
-
-
+x =1
 
 #14a86fbc0091

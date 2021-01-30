@@ -25,3 +25,6 @@ class crims:
             self.bot.logged = True
         return True
 
+    def roubo(self):
+        ie.wait_its_ready()
+        self.ie.get_element_by_id('menu-robbery').click()

@@ -9,6 +9,19 @@ class IE:
         self.url = kwargs.get('url', '')
         self.timeout = kwargs.get('timeout', 5)
         self.oShell = Dispatch('WScript.Shell')
+        self.wait = waitElement(self.driver, timeout=self.timeout)
+
+    def wait(func):
+        def wrapper():
+            timeout = self.timeout
+            retorno = None
+            while timeout and not retorno:
+                time.sleep(0.050)
+                timeout -= 0.050
+                retorno = func()
+            return retorno
+        return wrapper
+
 
     def activate(self):
         self.oShell.Appactivate('Internet Explorer')
@@ -36,6 +49,7 @@ class IE:
         self.wait_its_ready()
         return True
 
+    @wait
     def get_element_by_id(self, id):
         retorno = []
         for elemento in self.driver.document.all:
@@ -67,6 +81,57 @@ class IE:
         return retorno
 
     def get_elements_by_class_name(self, name):
+        retorno = []
+        for elemento in self.driver.document.all:
+            try:
+                if elemento.className == name:
+                    retorno.append(elemento)
+            except AttributeError:
+                continue
+        return retorno
+
+
+class waitElement:
+    def __init__(self, driver, **kwargs):
+        self.driver = driver
+        self.timeout = kwargs.get('timeout', 5)
+
+
+    def by_id(self, id):
+        retorno = []
+        timeout = self.timeout
+        while not retorno or timeout:
+            for elemento in self.driver.document.all:
+                try:
+                    if elemento.id == id:
+                        retorno.append(elemento)
+                except AttributeError:
+                    continue
+            time.sleep(0.050)
+            timeout -= 0.050
+        return True if retorno else False
+
+    def by_tag_name(self, name):
+        retorno = []
+        for elemento in self.driver.document.all:
+            try:
+                if elemento.tagName == name:
+                    retorno.append(elemento)
+            except AttributeError:
+                continue
+        return retorno
+
+    def by_name(self, name):
+        retorno = []
+        for elemento in self.driver.document.all:
+            try:
+                if elemento.name == name:
+                    retorno.append(elemento)
+            except AttributeError:
+                continue
+        return retorno
+
+    def by_class_name(self, name):
         retorno = []
         for elemento in self.driver.document.all:
             try:

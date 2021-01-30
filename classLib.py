@@ -7,7 +7,7 @@ class criminoso:
         self.xHTML = None
 
     def parse_right_content(self):
-        return [x.strip() for x in BeautifulSoup(self.driver.get_element_by_id('content_right')[0].outerHtml, 'lxml').findAll(text=True) if not len(x) == 1]
+        return [x.strip() for x in BeautifulSoup(self.driver.get_element_by_id('content_right')[0].outerHtml, 'lxml').findAll(text=True) if not len(x) == 1 or x.isdigit()]
 
 
     def parse_user_info_html(self):
@@ -55,17 +55,17 @@ class criminoso:
 
 
     def estamina(self):
-        return int(self.parse_rigth_content()[10].split(' ')[1].split('%')[0])
+        return int(self.parse_right_content()[10].split(' ')[1].split('%')[0])
 
     def addiction(self):
-        return int(self.parse_right_content())[12].split(' ')[1].split('%')[0]
+        return int(self.parse_right_content()[12].split(' ')[1].split('%')[0])
 
 
     def hp(self):
-        self.parse_right_content()[11].split('HP: ')[1].split(' / ')
+        return self.parse_right_content()[11].split('HP: ')[1].split(' / ')
 
     def money(self):
-        return float(self.parse_right_content()[22].split('$')[1])
+        return float(self.parse_right_content()[22].split('$')[1].replace(',', '.'))
 
     def pwr_solo(self):
         return int(self.parse_right_content()[24])
