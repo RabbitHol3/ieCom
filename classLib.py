@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import json
 
 
 class criminoso:
@@ -8,7 +9,6 @@ class criminoso:
 
     def parse_right_content(self):
         return [x.strip() for x in BeautifulSoup(self.driver.get_element_by_id('content_right')[0].outerHtml, 'lxml').findAll(text=True) if not len(x) == 1 or x.isdigit()]
-
 
     def parse_user_info_html(self):
         return BeautifulSoup(self.driver.get_element_by_id('user-profile-info')[0].outerHtml, 'lxml')
@@ -85,3 +85,25 @@ class botStats:
     def __init__(self):
         self.running = None
         self.logged = None
+
+class novoSats:
+    def __init__(self, driver):
+        self.driver = driver
+        self.code = "document.getElementsByClassName('modal-footer')[0].innerText = JSON.stringify(userState)"
+        self.userState = self.updateStats()
+
+    def updateStats(self):
+        try:
+            elm = self.driver.get_elements_by_class_name('modal-footer')[0]
+            elm.innerText = ""
+            self.driver.execute(self.code)
+            self.userState = json.loads(elm.innerText)
+            return json.loads(elm.innerText)
+        except TypeError:
+            return False
+        
+    def __enter__(self):  
+        return self.userState      
+
+    def __exit__(self):
+        pass

@@ -1,28 +1,49 @@
-import time
-
+import time, psutil
+from datetime import datetime
 from win32com.client import Dispatch
+from functools import  wraps
+
+
+def retry(function):
+    @wraps(function)
+    def _retry(*args, **kwargs):
+        trys = 6
+        while trys:
+            try:
+                retorno = function(*args, **kwargs)
+                if type(retorno) is list and len(retorno) == 0:
+                    raise IndexError
+                return retorno
+            except:
+                time.sleep(0.5)
+                trys -= 1
+                print ("_retry: another error")
+    return _retry
 
 class IE:
+
+    def __enter__(self):
+        PROCNAME = "iexplore.exe"
+        for proc in psutil.process_iter():
+            if proc.name() == PROCNAME:
+                proc.kill()
+
     def __init__(self, **kwargs):
         self.driver = Dispatch("InternetExplorer.Application")
         self.driver.Visible = kwargs.get('visible', 0)
         self.url = kwargs.get('url', '')
         self.timeout = kwargs.get('timeout', 5)
         self.oShell = Dispatch('WScript.Shell')
-        self.wait = waitElement(self.driver, timeout=self.timeout)
+        
 
-    def wait(func):
-        def wrapper():
-            timeout = self.timeout
-            retorno = None
-            while timeout and not retorno:
-                time.sleep(0.050)
-                timeout -= 0.050
-                retorno = func()
-            return retorno
-        return wrapper
+    
 
-
+    def __exit__(self, *args, **kwargs):
+        try:
+            self.driver.quit()
+        except Exception:
+            pass
+    
     def activate(self):
         self.oShell.Appactivate('Internet Explorer')
         return True
@@ -49,7 +70,7 @@ class IE:
         self.wait_its_ready()
         return True
 
-    @wait
+    @retry
     def get_element_by_id(self, id):
         retorno = []
         for elemento in self.driver.document.all:
@@ -59,7 +80,8 @@ class IE:
             except AttributeError:
                 continue
         return retorno
-
+    
+    @retry
     def get_elements_by_tag_name(self, name):
         retorno = []
         for elemento in self.driver.document.all:
@@ -70,6 +92,7 @@ class IE:
                 continue
         return retorno
 
+    @retry
     def get_elements_by_name(self, name):
         retorno = []
         for elemento in self.driver.document.all:
@@ -80,6 +103,7 @@ class IE:
                 continue
         return retorno
 
+    @retry
     def get_elements_by_class_name(self, name):
         retorno = []
         for elemento in self.driver.document.all:
@@ -89,6 +113,12 @@ class IE:
             except AttributeError:
                 continue
         return retorno
+
+    def execute(self, code):
+        self.driver.document.parentWindow.execScript(code)    
+        return True
+
+
 
 
 class waitElement:
